@@ -1,0 +1,39 @@
+services:
+  nexus:
+    image: sonatype/nexus3:3.90.2
+    container_name: nexus
+    restart: unless-stopped
+                                                                                                                     
+    ports:
+      - "8081:8081"   # Nexus UI / API
+      # - "5000:5000" # Docker Registry (If needed)
+                                                                                                                     
+    environment:
+      TZ: Asia/Shanghai
+                                                                                                                     
+      # JVM & GC
+      INSTALL4J_ADD_VM_PARAMS: >
+        -Xms2g
+        -Xmx4g
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=200
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/nexus-data/log
+                                                                                                                     
+    volumes:
+      - nexus-data:/nexus-data
+                                                                                                                     
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+                                                                                                                     
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+                                                                                                                     
+volumes:
+  nexus-data:
+    name: nexus-data
