@@ -1,0 +1,28 @@
+services:
+  cassandra:
+    image: cassandra:5.0
+    container_name: cassandra
+    hostname: cassandra
+    restart: unless-stopped
+                                                                                                                     
+    ports:
+      - "9042:9042"   # CQL client
+      - "7000:7000"   # cluster communication
+      - "7199:7199"   # JMX
+                                                                                                                     
+    environment:
+      CASSANDRA_CLUSTER_NAME: dev-cluster
+      CASSANDRA_DC: dc1
+      CASSANDRA_RACK: rack1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      MAX_HEAP_SIZE: 2G
+      HEAP_NEWSIZE: 512M
+                                                                                                                     
+    volumes:
+      - ./data:/var/lib/cassandra
+                                                                                                                     
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe cluster"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
