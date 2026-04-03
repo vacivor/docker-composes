@@ -1,0 +1,59 @@
+services:
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: elasticsearch.Dockerfile
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=elastic
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - elk
+                                                                                                                     
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.19.12
+    container_name: logstash
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTIC_PASSWORD: elastic
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    networks:
+      - elk
+                                                                                                                     
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.19.12
+    container_name: kibana
+    restart: always
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=elastic
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+                                                                                                                     
+networks:
+  elk:
+    driver: bridge
+                                                                                                                     
+volumes:
+  esdata:
+    driver: local
