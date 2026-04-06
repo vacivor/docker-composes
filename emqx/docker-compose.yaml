@@ -1,0 +1,29 @@
+services:
+  emqx:
+    image: emqx/emqx:6.1.1
+    container_name: emqx
+    hostname: emqx
+    restart: always
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "8084:8084"
+      - "8883:8883"
+      - "18083:18083"
+    environment:
+      EMQX_NODE_NAME: emqx@emqx
+      TZ: Asia/Shanghai
+    volumes:
+      - emqx-data:/opt/emqx/data
+      - emqx-log:/opt/emqx/log
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 10s
+      timeout: 25s
+      retries: 5
+
+volumes:
+  emqx-data:
+    name: emqx-data
+  emqx-log:
+    name: emqx-log
