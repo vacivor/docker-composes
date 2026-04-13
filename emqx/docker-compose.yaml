@@ -3,7 +3,7 @@ services:
     image: emqx/emqx:6.1.1
     container_name: emqx
     hostname: emqx
-    restart: always
+    restart: unless-stopped
     ports:
       - "1883:1883"
       - "8083:8083"

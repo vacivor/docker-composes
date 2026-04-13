@@ -3,13 +3,13 @@ services:
     image: portainer/portainer-ce:2.39.0-alpine
     container_name: portainer
     ports:
-      - "9001:9000"
+      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
     environment:
       - TZ=Asia/Shanghai
-    restart: always
+    restart: unless-stopped
 
 volumes:
   portainer-data:

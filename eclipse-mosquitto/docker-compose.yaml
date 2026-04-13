@@ -1,0 +1,20 @@
+services:
+  eclipse-mosquitto:
+    image: eclipse-mosquitto:2.1.2-alpine
+    container_name: eclipse-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9883:9883"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./config:/mosquitto/config:ro
+      - eclipse-mosquitto-data:/mosquitto/data
+      - eclipse-mosquitto-log:/mosquitto/log
+
+volumes:
+  eclipse-mosquitto-data:
+    name: eclipse-mosquitto-data
+  eclipse-mosquitto-log:
+    name: eclipse-mosquitto-log

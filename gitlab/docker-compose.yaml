@@ -2,7 +2,7 @@ services:
   gitlab:
     image: gitlab/gitlab-ce:18.9.3-ce.0
     container_name: gitlab
-    restart: always
+    restart: unless-stopped
     hostname: 'gitlab.281018.xyz'
     ports:
      - '80:80'

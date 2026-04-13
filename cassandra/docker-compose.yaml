@@ -19,10 +19,14 @@ services:
       HEAP_NEWSIZE: 512M
                                                                                                                      
     volumes:
-      - ./data:/var/lib/cassandra
+      - cassandra-data:/var/lib/cassandra
                                                                                                                      
     healthcheck:
       test: ["CMD", "cqlsh", "-e", "describe cluster"]
       interval: 30s
       timeout: 10s
       retries: 10
+
+volumes:
+  cassandra-data:
+    name: cassandra-data

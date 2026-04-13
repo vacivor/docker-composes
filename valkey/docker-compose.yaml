@@ -3,12 +3,13 @@ services:
     image: valkey/valkey:9.0-alpine
     container_name: valkey
     restart: unless-stopped
-    command: ["valkey-server", "--appendonly", "yes", "--save", "60", "1"]
+    command: ["valkey-server", "/usr/local/etc/valkey/valkey.conf"]
     ports:
       - "6379:6379"
     environment:
       TZ: Asia/Shanghai
     volumes:
+      - ./config/valkey.conf:/usr/local/etc/valkey/valkey.conf:ro
       - valkey-data:/data
     healthcheck:
       test: ["CMD", "valkey-cli", "-h", "127.0.0.1", "ping"]

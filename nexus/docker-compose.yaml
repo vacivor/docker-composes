@@ -6,7 +6,7 @@ services:
                                                                                                                      
     ports:
       - "8081:8081"   # Nexus UI / API
-      # - "5000:5000" # Docker Registry (If needed)
+      - "5000:5000"   # Docker Registry
                                                                                                                      
     environment:
       TZ: Asia/Shanghai
