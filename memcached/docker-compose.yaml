@@ -1,0 +1,10 @@
+services:
+  memcached:
+    image: memcached:1.6.41-alpine
+    container_name: memcached
+    restart: unless-stopped
+    command: memcached -m 64 -p 11211 -vv
+    ports:
+      - "11211:11211"
+    environment:
+      TZ: Asia/Shanghai
