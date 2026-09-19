@@ -1,0 +1,245 @@
+x-valkey-common: &valkey-common
+  image: valkey/valkey:9.2-alpine
+  restart: unless-stopped
+  network_mode: host
+  environment:
+    VALKEY_CLUSTER_ANNOUNCE_IP: ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+    TZ: Asia/Shanghai
+
+services:
+  valkey-node-1:
+    <<: *valkey-common
+    container_name: valkey-node-1
+    command:
+      - valkey-server
+      - --bind
+      - "0.0.0.0 ::"
+      - --port
+      - "7001"
+      - --cluster-enabled
+      - "yes"
+      - --cluster-config-file
+      - nodes.conf
+      - --cluster-node-timeout
+      - "5000"
+      - --cluster-announce-ip
+      - ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      - --cluster-announce-port
+      - "7001"
+      - --cluster-announce-bus-port
+      - "17001"
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    volumes:
+      - valkey-cluster-node-1:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-p", "7001", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey-node-2:
+    <<: *valkey-common
+    container_name: valkey-node-2
+    command:
+      - valkey-server
+      - --bind
+      - "0.0.0.0 ::"
+      - --port
+      - "7002"
+      - --cluster-enabled
+      - "yes"
+      - --cluster-config-file
+      - nodes.conf
+      - --cluster-node-timeout
+      - "5000"
+      - --cluster-announce-ip
+      - ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      - --cluster-announce-port
+      - "7002"
+      - --cluster-announce-bus-port
+      - "17002"
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    volumes:
+      - valkey-cluster-node-2:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-p", "7002", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey-node-3:
+    <<: *valkey-common
+    container_name: valkey-node-3
+    command:
+      - valkey-server
+      - --bind
+      - "0.0.0.0 ::"
+      - --port
+      - "7003"
+      - --cluster-enabled
+      - "yes"
+      - --cluster-config-file
+      - nodes.conf
+      - --cluster-node-timeout
+      - "5000"
+      - --cluster-announce-ip
+      - ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      - --cluster-announce-port
+      - "7003"
+      - --cluster-announce-bus-port
+      - "17003"
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    volumes:
+      - valkey-cluster-node-3:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-p", "7003", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey-node-4:
+    <<: *valkey-common
+    container_name: valkey-node-4
+    command:
+      - valkey-server
+      - --bind
+      - "0.0.0.0 ::"
+      - --port
+      - "7004"
+      - --cluster-enabled
+      - "yes"
+      - --cluster-config-file
+      - nodes.conf
+      - --cluster-node-timeout
+      - "5000"
+      - --cluster-announce-ip
+      - ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      - --cluster-announce-port
+      - "7004"
+      - --cluster-announce-bus-port
+      - "17004"
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    volumes:
+      - valkey-cluster-node-4:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-p", "7004", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey-node-5:
+    <<: *valkey-common
+    container_name: valkey-node-5
+    command:
+      - valkey-server
+      - --bind
+      - "0.0.0.0 ::"
+      - --port
+      - "7005"
+      - --cluster-enabled
+      - "yes"
+      - --cluster-config-file
+      - nodes.conf
+      - --cluster-node-timeout
+      - "5000"
+      - --cluster-announce-ip
+      - ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      - --cluster-announce-port
+      - "7005"
+      - --cluster-announce-bus-port
+      - "17005"
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    volumes:
+      - valkey-cluster-node-5:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-p", "7005", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey-node-6:
+    <<: *valkey-common
+    container_name: valkey-node-6
+    command:
+      - valkey-server
+      - --bind
+      - "0.0.0.0 ::"
+      - --port
+      - "7006"
+      - --cluster-enabled
+      - "yes"
+      - --cluster-config-file
+      - nodes.conf
+      - --cluster-node-timeout
+      - "5000"
+      - --cluster-announce-ip
+      - ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      - --cluster-announce-port
+      - "7006"
+      - --cluster-announce-bus-port
+      - "17006"
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    volumes:
+      - valkey-cluster-node-6:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-p", "7006", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey-cluster-init:
+    image: valkey/valkey:9.2-alpine
+    container_name: valkey-cluster-init
+    network_mode: host
+    depends_on:
+      valkey-node-1:
+        condition: service_healthy
+      valkey-node-2:
+        condition: service_healthy
+      valkey-node-3:
+        condition: service_healthy
+      valkey-node-4:
+        condition: service_healthy
+      valkey-node-5:
+        condition: service_healthy
+      valkey-node-6:
+        condition: service_healthy
+    environment:
+      VALKEY_CLUSTER_ANNOUNCE_IP: ${VALKEY_CLUSTER_ANNOUNCE_IP:-127.0.0.1}
+      TZ: Asia/Shanghai
+    volumes:
+      - ./init-cluster.sh:/init-cluster.sh:ro
+    entrypoint: ["/bin/sh", "/init-cluster.sh"]
+    restart: "no"
+
+volumes:
+  valkey-cluster-node-1:
+    name: valkey-cluster-node-1
+  valkey-cluster-node-2:
+    name: valkey-cluster-node-2
+  valkey-cluster-node-3:
+    name: valkey-cluster-node-3
+  valkey-cluster-node-4:
+    name: valkey-cluster-node-4
+  valkey-cluster-node-5:
+    name: valkey-cluster-node-5
+  valkey-cluster-node-6:
+    name: valkey-cluster-node-6
