@@ -1,6 +1,6 @@
 services:
   valkey:
-    image: valkey/valkey:9.0-alpine
+    image: valkey/valkey:9.2-alpine
     container_name: valkey
     restart: unless-stopped
     command: ["valkey-server", "/usr/local/etc/valkey/valkey.conf"]
